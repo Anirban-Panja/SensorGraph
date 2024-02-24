@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Device Motion and Rotation Demo</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+    #output {
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+<h1>Device Motion and Rotation Demo</h1>
+<div id="output">
+    <p>Acceleration (m/s²):</p>
+    <p id="accelerationX">X: </p>
+    <p id="accelerationY">Y: </p>
+    <p id="accelerationZ">Z: </p>
+    <p>Rotation (degrees):</p>
+    <p id="rotationAlpha">Alpha: </p>
+    <p id="rotationBeta">Beta: </p>
+    <p id="rotationGamma">Gamma: </p>
+    <canvas id="accelerometerChart" width="400" height="200"></canvas>
+    <canvas id="gyroscopeChart" width="400" height="200"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    window.addEventListener("devicemotion", handleMotion, true);
+    window.addEventListener("deviceorientation", handleOrientation, true);
+
+    var accelerometerChartCtx = document.getElementById('accelerometerChart').getContext('2d');
+    var gyroscopeChartCtx = document.getElementById('gyroscopeChart').getContext('2d');
+
+    var accelerometerChart = new Chart(accelerometerChartCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'X',
+                borderColor: 'blue',
+                data: [],
+                fill: false
+            }, {
+                label: 'Y',
+                borderColor: 'red',
+                data: [],
+                fill: false
+            }, {
+                label: 'Z',
+                borderColor: 'green',
+                data: [],
+                fill: false
+            }]
+        },
+        options: {
+            responsive: false,
+            scales: {
+                xAxes: [{
+                    display: true
+                }],
+                yAxes: [{
+                    display: true
+                }]
+            }
+        }
+    });
+
+    var gyroscopeChart = new Chart(gyroscopeChartCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'X',
+                borderColor: 'blue',
+                data: [],
+                fill: false
+            }, {
+                label: 'Y',
+                borderColor: 'red',
+                data: [],
+                fill: false
+            }, {
+                label: 'Z',
+                borderColor: 'green',
+                data: [],
+                fill: false
+            }]
+        },
+        options: {
+            responsive: false,
+            scales: {
+                xAxes: [{
+                    display: true
+                }],
+                yAxes: [{
+                    display: true
+                }]
+            }
+        }
+    });
+
+    function handleMotion(event) {
+        var acceleration = event.accelerationIncludingGravity;
+        document.getElementById("accelerationX").textContent = "X: " + acceleration.x.toFixed(2);
+        document.getElementById("accelerationY").textContent = "Y: " + acceleration.y.toFixed(2);
+        document.getElementById("accelerationZ").textContent = "Z: " + acceleration.z.toFixed(2);
+        
+        // Update chart data
+        var time = new Date();
+        accelerometerChart.data.labels.push(time.getSeconds());
+        accelerometerChart.data.datasets[0].data.push(acceleration.x);
+        accelerometerChart.data.datasets[1].data.push(acceleration.y);
+        accelerometerChart.data.datasets[2].data.push(acceleration.z);
+        accelerometerChart.update();
+    }
+
+    function handleOrientation(event) {
+        var rotation = event.alpha != null ? event : event.accelerationIncludingGravity;
+        document.getElementById("rotationAlpha").textContent = "Alpha: " + rotation.alpha.toFixed(2);
+        document.getElementById("rotationBeta").textContent = "Beta: " + rotation.beta.toFixed(2);
+        document.getElementById("rotationGamma").textContent = "Gamma: " + rotation.gamma.toFixed(2);
+        
+        // Update chart data
+        var time = new Date();
+        gyroscopeChart.data.labels.push(time.getSeconds());
+        gyroscopeChart.data.datasets[0].data.push(rotation.alpha);
+        gyroscopeChart.data.datasets[1].data.push(rotation.beta);
+        gyroscopeChart.data.datasets[2].data.push(rotation.gamma);
+        gyroscopeChart.update();
+    }
+</script>
+</body>
+</html>
