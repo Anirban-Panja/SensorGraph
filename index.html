@@ -76,17 +76,17 @@
         data: {
             labels: [],
             datasets: [{
-                label: 'X',
+                label: 'Alpha',
                 borderColor: 'blue',
                 data: [],
                 fill: false
             }, {
-                label: 'Y',
+                label: 'Beta',
                 borderColor: 'red',
                 data: [],
                 fill: false
             }, {
-                label: 'Z',
+                label: 'Gamma',
                 borderColor: 'green',
                 data: [],
                 fill: false
@@ -133,6 +133,19 @@
         gyroscopeChart.data.datasets[1].data.push(rotation.beta);
         gyroscopeChart.data.datasets[2].data.push(rotation.gamma);
         gyroscopeChart.update();
+
+        // Determine movement
+        var movement = '';
+        if (rotation.beta < -20) {
+            movement = 'Forward';
+        } else if (rotation.beta > 20) {
+            movement = 'Backward';
+        } else if (rotation.gamma < -20) {
+            movement = 'Left';
+        } else if (rotation.gamma > 20) {
+            movement = 'Right';
+        }
+        document.getElementById("movement").textContent = "Movement: " + movement;
     }
 </script>
 </body>
