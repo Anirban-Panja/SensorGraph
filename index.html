@@ -135,16 +135,16 @@
         gyroscopeChart.data.datasets[2].data.push(rotation.gamma);
         gyroscopeChart.update();
 
-        // Determine movement
+        // Determine movement based on orientation
         var movement = '';
-        if (rotation.beta < -20) {
-            movement = 'Forward';
-        } else if (rotation.beta > 20) {
-            movement = 'Backward';
-        } else if (rotation.gamma < -20) {
-            movement = 'Left';
-        } else if (rotation.gamma > 20) {
+        if (rotation.alpha >= 45 && rotation.alpha < 135) {
             movement = 'Right';
+        } else if (rotation.alpha >= 135 && rotation.alpha < 225) {
+            movement = 'Backward';
+        } else if (rotation.alpha >= 225 && rotation.alpha < 315) {
+            movement = 'Left';
+        } else {
+            movement = 'Forward';
         }
         document.getElementById("movement").textContent = "Movement: " + movement;
     }
